@@ -28,7 +28,7 @@ def get_character_data(character_json):
     return character_data
 
 
-def api_call(offset=0, pub_key=Keys.pub_key, priv_key=Keys.priv_key):
+def api_call(offset=0, missing=0,  pub_key=Keys.pub_key, priv_key=Keys.priv_key):
     # API url
     base_url = 'https://gateway.marvel.com:443/'
     endpoint = '/v1/public/characters?'
@@ -43,22 +43,33 @@ def api_call(offset=0, pub_key=Keys.pub_key, priv_key=Keys.priv_key):
         'ts': ts,
         'apikey': pub_key,
         'hash': auth_hash,
-        'limit': 100,
+        'limit': missing,
         'offset': offset,
+        'orderBy': 'name'
     }
-    r = requests.get(url, params=param)
-
-    return r.json().get('data').get('results')
+    response = requests.get(url, params=param).json().get('data')
+    return response.get('total'), response.get('results')
 
 
 def main():
-    response = api_call()
+    offset = 0
     result = []
-    for character in response:
-        result.append(get_character_data(character))
+    missing = 100
+    # Checks if all the data has been received
+    while True:
+        total, response = api_call(offset, missing)
+        for character in response:
+            result.append(get_character_data(character))
+        offset += missing
 
-    df = pd.DataFrame(result)
-    df.to_csv('fetched_data.csv')
+        # Checks if requests are done
+        missing = min(total - offset, 100)
+        print(total, offset, missing)
+        if missing <= 0:
+            break
+
+    df = pd.DataFrame(result, columns=['id', 'name', 'description', 'comics', 'series', 'stories', 'events'])
+    df.to_csv('Case python - result.csv')
 
 
 if __name__ == '__main__':

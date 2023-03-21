@@ -4,13 +4,13 @@
 - Generate API keys on [marvel's website](https://developer.marvel.com/)
 - Put the keys on the correct variables on `keys.py`
 - Run `main.py` to get a sample of the data
-- The file `fetched_data.csv` will contain the desired data from the first 100 characters in alphabetical order
+- The file `Case python - result.csv` contains the desired output of this case.
 
 ## Development strategy
 - Make a single API call ✓
 - Understand the data format by fetching only one row ✓
 - Write a script that get the needed info from the first row ✓
-- Write a script that requests all the dataset
+- Write a script that requests all the dataset ✓
 
 ## API result understanding
 The return of the request is a JSON file, the desired data is inside the "results" field. The value of this field is a
@@ -27,8 +27,8 @@ a random hero, we can access all the needed properties as shown below.
 hero_id = hero['id']
 hero_name = hero['name']
 hero_description = hero['description']
-numer_of_comics = hero['comics']['available']
-numer_of_series = hero['series']['available']
-numer_of_stories = hero['stories']['available']
-numer_of_events = hero['events']['available']
+number_of_comics = hero['comics']['available']
+number_of_series = hero['series']['available']
+number_of_stories = hero['stories']['available']
+number_of_events = hero['events']['available']
 ```
