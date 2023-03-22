@@ -32,3 +32,29 @@ number_of_series = hero['series']['available']
 number_of_stories = hero['stories']['available']
 number_of_events = hero['events']['available']
 ```
+
+## Code explanation
+
+### Auxiliary functions
+
+#### `generate_ts`
+This function just generates a random string to be used as timestamp value on the API authorization. This parameter
+could be the same string everytime, the API is called, but for security purposes I chose to generate a new random value
+everytime the script is run.
+
+#### `md5_checksum`
+This function calculates the md5 hash of the string in the format described by the API documentation. For this, it
+receives both public and private keys and the timestamp string, merge them in the desired way and apply the  hash
+function.
+
+#### `get_character_data`
+This function extract the desired data from a character dictionary received on the API call.
+
+### Main function
+The main function is based on a iteration loop that makes the API calls. Those calls must be made inside the loop
+because of the maximum response size of 100 characters. This way on each iteration the loop checks if the amount of
+characters already received is equal to the total number of characters and, if so, the loop stops.
+
+Other than that, the loop populates a list with the desired data from all characters. In the end of the loop this list
+is used to create a pandas dataframe which will be saved to memory on the file `Case python - result.csv`.
+
